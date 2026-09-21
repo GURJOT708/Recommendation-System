@@ -1,41 +1,36 @@
 # Movie Recommendation System
 
-This repository contains a Movie Recommendation System built using Python, Pandas, Seaborn, Scipy, and Scikit-Learn. The system utilizes the **MovieLens (small) Dataset** to analyze user preferences and generate personalized movie suggestions using Collaborative Filtering.
+This project implements and compares two popular recommendation approaches using the MovieLens dataset (small version).
 
-## 🚀 Project Overview
+## 📋 Project Overview
 
-- **Exploratory Data Analysis (EDA):** Identifies top-rated movies and visualizes the overall distribution of movie ratings.
-- **Collaborative Filtering:** Implements an item-based K-Nearest Neighbors (KNN) model using **Cosine Similarity** to recommend movies based on user rating patterns.
-- **Visualizations:** Visualizes movie similarity distances to show how closely recommended movies align with the query title.
+Recommendation engines are critical for content-driven platforms. In this notebook, we explore two core modeling paradigms:
+1. **K-Nearest Neighbors (KNN)**: An instance-based Collaborative Filtering approach that calculates similarities between movies directly based on user ratings.
+2. **Matrix Factorization (SVD)**: A model-based Collaborative Filtering approach that decomposes the user-movie rating matrix into lower-dimensional latent factors representing hidden traits (e.g., quality, style, pacing).
 
-## 🛠️ Tech Stack & Libraries
+---
 
-- **Python 3**
-- **Pandas** (Data loading and manipulation)
-- **Matplotlib & Seaborn** (Data visualization)
-- **Scipy** (Sparse matrix representation for memory efficiency)
-- **Scikit-Learn** (Nearest Neighbors model building)
+## 📊 Models & Methodology
 
-## 📁 Dataset
+### 1. K-Nearest Neighbors (KNN)
+* **Logic**: Measures direct overlap in rating behaviors. For a target movie, we retrieve its closest neighbors using **Cosine Similarity**.
+* **Best for**: Intuitive, direct similarity recommendations (e.g., recommending sequels, spin-offs, or movies in the exact same franchise).
 
-This project uses the `ml-latest-small` dataset from MovieLens, which contains:
-- `movies.csv`: Movie IDs, titles, and genres.
-- `ratings.csv`: User ratings (0.5 to 5.0) and timestamps.
+### 2. Matrix Factorization (Singular Value Decomposition - SVD)
+* **Logic**: Compresses the sparse user-item matrix into dense $k$-dimensional vectors capturing abstract themes and user taste profiles.
+* **Best for**: Discovered patterns, serendipitous discovery, and handling highly sparse data.
 
-## 💻 How to Use the Recommender
+---
 
-Once the cells are executed, you can search for a movie and find similar items using:
+## 📈 Performance Comparison
 
-```python
-get_recommendations('Fight Club')
-To view a visual plot of recommendations and their matching cosine distances:
+We evaluated both models on a random sample of 500 records from the test split (80/20 train-test split):
 
-plot_recommendation_distances('Fight Club')
-📊 Sample Outputs
-For 'Toy Story (1995)', the top recommendations include:
+| Metric | KNN Model (Item-based) | SVD (Matrix Factorization) |
+| :--- | :---: | :---: |
+| **MAE** (Mean Absolute Error) | 0.7558 | **0.7416** |
+| **RMSE** (Root Mean Squared Error) | 0.9935 | **0.9369** |
 
-Toy Story 2 (1999)
-Jurassic Park (1993)
-Independence Day (1996)
-Star Wars: Episode IV - A New Hope (1977)
-Forrest Gump (1994)
+### Key Findings
+- **SVD achieves lower error values**: The SVD model outperforms KNN across both metrics, indicating that generalizing ratings through latent feature vectors provides cleaner predictions than direct local comparisons.
+- **Recommendation Diversity**: SVD introduces broader discovery (recommending *WALL·E* or *Lost in Translation* alongside *The Dark Knight* based on abstract high-quality traits), while KNN focuses strictly on genre-adjacent titles (*Batman Begins*, *Iron Man*).
